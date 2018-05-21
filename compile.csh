@@ -17,41 +17,9 @@ set BASEDIR=`pwd`
 set MACHINE_ID=${platform}  
 set COMPILE_OPTION=${MACHINE_ID}-intel.mk
 
-set compile_FMS=1
 set compile_MOM6_LIB=1
 set compile_ocean_only=0
 set compile_MOM6_SIS2=0
-###############################
-if ( ${compile_FMS} == 1 ) then 
- echo "compile FMS library ..."
- cd $BASEDIR
- mkdir -p build/intel/shared/repro
- cd build/intel/shared/repro
- if ( -f path_names ) then
-  rm -f path_names
- endif  
-
- echo "generating file_paths ..."
- ../../../../src/mkmf/bin/list_paths ../../../../src/FMS
-
- echo "generating makefile ..."
- ../../../../src/mkmf/bin/mkmf -t ../../../../src/mkmf/templates/${COMPILE_OPTION} -p libfms.a -c "-Duse_libMPI -Duse_netCDF -DSPMD" path_names
-
- echo "compiling FMS library..."
- make NETCDF=4 REPRO=1 libfms.a -j
- set result=$?
- if ( $result != 0 ) then
-  echo "compiling FMS failed"
-  exit 8
- else
-  echo "compiling FMS library successful"
- endif 
-
- cp libfms.a lib_FMS.a
-
-endif 
-
-echo "====================================================="
 ###############################################
 if ( ${compile_MOM6_LIB} == 1 ) then
  echo "compile MOM6 library ..."
@@ -85,8 +53,6 @@ if ( ${compile_MOM6_LIB} == 1 ) then
    cd $BASEDIR
    mkdir -p exec/${MACHINE_ID}/
  # link to the library and module files
-   rm -rf exec/${MACHINE_ID}/lib_FMS exec/${MACHINE_ID}/lib_ocean
-   ln -s ${BASEDIR}/build/intel/shared/repro exec/${MACHINE_ID}/lib_FMS
    ln -s ${BASEDIR}/build/intel/MOM6_LIB/repro exec/${MACHINE_ID}/lib_ocean
 
 endif
@@ -105,7 +71,7 @@ endif
  ../../../../src/mkmf/bin/list_paths ./ ../../../../src/MOM6/{config_src/dynamic,pkg/CVMix-src/src/shared,config_src/solo_driver,src/{*,*/*}}
 
  echo "generating makefile ..."
- ../../../../src/mkmf/bin/mkmf -t ../../../../src/mkmf/templates/${COMPILE_OPTION} -o '-I../../shared/repro' -p 'MOM6 -L../../shared/repro  -lfms' -c "-Duse_libMPI -Duse_netcdf -DSPMD" path_names
+ ../../../../src/mkmf/bin/mkmf -t ../../../../src/mkmf/templates/${COMPILE_OPTION} -o "-I../../shared/repro -I${FMS_DIR}" -p "MOM6 -L${FMS_DIR} -L../../shared/repro  -lfms" -c "-Duse_libMPI -Duse_netcdf -DSPMD" path_names
 
  echo "compiling MOM6 ocean only ..."
  make NETCDF=4 REPRO=1 MOM6 -j
