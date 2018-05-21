@@ -62,9 +62,7 @@ if [[ ${compile_MOM6_LIB} == 1 ]] ; then
     ../../../../src/mkmf/bin/mkmf -t ../../../../src/mkmf/templates/${COMPILE_OPTION} -p lib_ocean.a -o "-I${FMS_DIR}" path_names
     
     echo "compiling MOM6 library..."
-    make NETCDF=4 REPRO=1 lib_ocean.a 
-    set result=$?
-    if [[ "$result" != 0 ]] ; then
+    if ( ! make NETCDF=4 REPRO=1 lib_ocean.a  ) ; then
         sadness "compiling MOM6 failed"
     fi
     echo "compiling MOM6 library successful"
@@ -97,9 +95,7 @@ if [[ ${compile_ocean_only} == 1 ]] ; then
     ../../../../src/mkmf/bin/mkmf -t ../../../../src/mkmf/templates/${COMPILE_OPTION} -o "-I../../shared/repro -I${FMS_DIR}" -p "MOM6 -L${FMS_DIR} -L../../shared/repro  -lfms" -c "-Duse_libMPI -Duse_netcdf -DSPMD" path_names
     
     echo "compiling MOM6 ocean only ..."
-    make NETCDF=4 REPRO=1 MOM6 -j
-    set result=$?
-    if [[ $result != 0 ]] ; then
+    if ( ! make NETCDF=4 REPRO=1 MOM6 -j ) ; then
         sadness "compiling Ocean_only exectuable failed"
     fi
     echo "compiling Ocean_only exectuable successful"
