@@ -19,6 +19,13 @@ if ( "$FMS_DIR" == "" ) then
   set FMS_DIR=`cd ../FMS/FMS_INSTALL ; pwd -P`
 end
 
+if ( -d "$FMS_DIR" ) then
+  echo "Use FMS from: $FMS_DIR"
+else
+  echo "NO FMS!!  Set FMS_DIR variable or use --fms-dir"
+  exit 4
+endif
+
 set BASEDIR=`pwd`
 set MACHINE_ID=${platform}  
 set COMPILE_OPTION=${MACHINE_ID}-intel.mk
