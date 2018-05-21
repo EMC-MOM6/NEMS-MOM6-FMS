@@ -123,7 +123,7 @@ if [[ ${compile_MOM6_SIS2} == 1 ]] ; then
     ../../../../src/mkmf/bin/mkmf -t ../../../../src/mkmf/templates/${COMPILE_OPTION} -o '-I../../shared/repro' -p MOM6 -l '-L../../shared/repro  -lfms' -c '-Duse_libMPI -Duse_netcdf -DSPMD -DUSE_LOG_DIAG_FIELD_INFO -Duse_AM3_physics -D_USE_LEGACY_LAND_' path_names
     
     echo "compiling MOM6 ocean only ..."
-    if ( ! make NETCDF=4 REPRO=1 MOM6 -j )
+    if ( ! make NETCDF=4 REPRO=1 MOM6 -j ) ; then
         sadness "compiling MOM6-SIS2 exectuable/lib failed" 1>&2
     fi
     echo "compiling MOM6-SIS2 exectuable/lib successful"
