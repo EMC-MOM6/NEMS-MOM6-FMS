@@ -8,10 +8,16 @@ while ("$argv[1]" != "--")
     switch ($argv[1])
         case --platform:
                 set platform = $argv[2]; shift argv; breaksw
+        case --fms-dir:
+                set FMS_DIR = $argv[2]; shift argv; breaksw
     endsw
     shift argv
 end
 shift argv
+
+if ( "$FMS_DIR" == "" ) then
+  set FMS_DIR=`cd ../FMS/FMS_INSTALL ; pwd -P`
+end
 
 set BASEDIR=`pwd`
 set MACHINE_ID=${platform}  
