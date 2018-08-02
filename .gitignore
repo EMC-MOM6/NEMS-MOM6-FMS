@@ -1,0 +1,9 @@
+MOM6_INSTALL/
+build/
+exec/
+libmom.a
+mom6.mk.install
+mom_cap.o
+mom_cap_mod.mod
+time_utils.o
+time_utils_mod.mod

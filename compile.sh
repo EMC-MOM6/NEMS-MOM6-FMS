@@ -63,7 +63,7 @@ if ( ${compile_MOM6_LIB} == 1 ) then
  endif
 
  echo "generating file_paths ..."
- ../../../../src/mkmf/bin/list_paths ../../../../src/MOM6/src/*/ ../../../../src/MOM6/src/*/*/ ../../../../src/MOM6/config_src/dynamic_symmetric/ ../../../../src/MOM6/config_src/coupled_driver/ 
+ ../../../../src/mkmf/bin/list_paths ../../../../src/MOA-MOM6/src/*/ ../../../../src/MOA-MOM6/src/*/*/ ../../../../src/MOA-MOM6/config_src/dynamic_symmetric/ ../../../../src/MOA-MOM6/config_src/coupled_driver/ 
 
  echo "generating makefile ..."
  ../../../../src/mkmf/bin/mkmf -t ../../../../src/mkmf/templates/${COMPILE_OPTION} -p lib_ocean.a -o '-I../../shared/repro' path_names
@@ -102,7 +102,7 @@ endif
  endif 
 
  echo "generating file_paths ..."
- ../../../../src/mkmf/bin/list_paths ./ ../../../../src/MOM6/{config_src/dynamic,pkg/CVMix-src/src/shared,config_src/solo_driver,src/{*,*/*}}
+ ../../../../src/mkmf/bin/list_paths ./ ../../../../src/MOA-MOM6/{config_src/dynamic,pkg/CVMix-src/src/shared,config_src/solo_driver,src/{*,*/*}}
 
  echo "generating makefile ..."
  ../../../../src/mkmf/bin/mkmf -t ../../../../src/mkmf/templates/${COMPILE_OPTION} -o '-I../../shared/repro' -p 'MOM6 -L../../shared/repro  -lfms' -c "-Duse_libMPI -Duse_netcdf -DSPMD" path_names
