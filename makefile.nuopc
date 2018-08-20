@@ -42,10 +42,9 @@ install: $(LIBRARY)
 	@echo "ESMF_DEP_FRONT     = mom_cap_mod" >> $(MOM).mk.install
 	@echo "ESMF_DEP_INCPATH   = $(INSTALLDIR)" >> $(MOM).mk.install
 	@echo "ESMF_DEP_CMPL_OBJS = " >> $(MOM).mk.install
-	@echo "ESMF_DEP_LINK_OBJS = $(INSTALLDIR)/libmom.a $(INSTALLDIR)/lib_ocean.a $(INSTALLDIR)/lib_FMS.a" >> $(MOM).mk.install
+	@echo "ESMF_DEP_LINK_OBJS = $(INSTALLDIR)/libmom.a $(INSTALLDIR)/lib_ocean.a" >> $(MOM).mk.install
 	mkdir -p $(INSTALLDIR)
 	cp -f $(NEMSMOMDIR)/lib_ocean/lib_ocean.a $(INSTALLDIR)
-	cp -f $(NEMSMOMDIR)/lib_FMS/lib_FMS.a $(INSTALLDIR)
 	cp -f libmom.a mom_cap_mod.mod $(INSTALLDIR)
 	cp -f $(MOM).mk.install $(INSTALLDIR)/$(MOM).mk
 
