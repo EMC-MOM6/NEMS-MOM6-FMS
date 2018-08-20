@@ -16,7 +16,7 @@ USER_CFLAGS=-DMOM6_CAP
 
 %.o : $(NUOPCAPDIR)/%.F90
 	$(ESMF_F90COMPILER) -c $(ESMF_F90COMPILEOPTS) $(USER_CFLAGS) $(UTILINCS) $(ESMF_F90COMPILEPATHS) $(ESMF_F90COMPILEFREECPP) $(ESMF_F90COMPILECPPFLAGS) $<
-mom_cap.o : time_utils.o mom_cap_methods.o
+mom_cap.o : time_utils.o 
 
 .PRECIOUS: %.o
 
@@ -26,7 +26,7 @@ MAKEFILE = makefile.nuopc
 
 LIBRARY  = libmom.a
 
-MODULES  = mom_cap.o time_utils.o mom_cap_methods.o
+MODULES  = mom_cap.o time_utils.o 
 
 all default:
 	@gmake -f $(MAKEFILE) $(LIBRARY)
