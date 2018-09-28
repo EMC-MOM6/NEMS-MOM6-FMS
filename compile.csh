@@ -1,19 +1,17 @@
 #!/bin/sh
 
-sadness() {
-  echo "$@" 1>&2
-  exit 8
-}
+set -xue
 
 # download MOM6 code
 # git clone --recursive https://github.com/NOAA-GFDL/MOM6-examples.git MOM6-examples
 #
+shift
 while [[ "$#" > 0 ]] ; do
     if [[ "$1" == "--fms-dir" ]] ; then
         FMS_DIR=$2
         shift
     elif [[ "$1" == "--platform" ]] ; then
-        platform="$2"
+        platform="$1"
         shift
     elif [[ "$1" == "--" ]] ; then
         shift
@@ -26,17 +24,12 @@ if [[ "${FMS_DIR:-Q}" == Q ]] ; then
     export FMS_DIR=$( cd ../FMS/FMS_INSTALL ; pwd -P )
 fi
 
-if [[ "${platform:-Q}" == Q ]] ; then
-    sadness "Please provide --platform"
-fi
-
-if [[ -d "$FMS_DIR" ]] ; then
+if [[ -d "$FMS_DIR" ]] then
     echo "Will use FMS from: $FMS_DIR"
 else
-    sadness "NO FMS!!  Set FMS_DIR variable or use --fms-dir"
+    echo "NO FMS!!  Set FMS_DIR variable or use --fms-dir"
+    exit 4
 fi
-
-set -xue
 
 BASEDIR=`pwd`
 MACHINE_ID=${platform}  
@@ -51,7 +44,7 @@ if [[ ${compile_MOM6_LIB} == 1 ]] ; then
     cd $BASEDIR
     mkdir -p build/intel/MOM6_LIB/repro
     cd build/intel/MOM6_LIB/repro
-    if [[ -f path_names ]] ; then
+    if [[ -f path_names ]] then
         rm -f path_names
     fi
 
@@ -62,10 +55,14 @@ if [[ ${compile_MOM6_LIB} == 1 ]] ; then
     ../../../../src/mkmf/bin/mkmf -t ../../../../src/mkmf/templates/${COMPILE_OPTION} -p lib_ocean.a -o "-I${FMS_DIR}" path_names
     
     echo "compiling MOM6 library..."
-    if ( ! make NETCDF=4 REPRO=1 lib_ocean.a  ) ; then
-        sadness "compiling MOM6 failed"
+    make NETCDF=4 REPRO=1 lib_ocean.a 
+    set result=$?
+    if [[ "$result" != 0 ]] ; then
+        echo "compiling MOM6 failed"
+        exit 8
+    else
+        echo "compiling MOM6 library successful"
     fi
-    echo "compiling MOM6 library successful"
 
     # ar rv lib_ocean.a *o
     echo "compiling MOM6 library done"
@@ -84,10 +81,10 @@ if [[ ${compile_ocean_only} == 1 ]] ; then
     cd $BASEDIR
     mkdir -p build/intel/ocean_only/repro
     cd build/intel/ocean_only/repro
-    if [[ -f path_names ]] ; then
+    if [[ -f path_names ]] then
         rm -f path_names
     fi
-    
+        
     echo "generating file_paths ..."
     ../../../../src/mkmf/bin/list_paths ./ ../../../../src/MOM6/{config_src/dynamic,pkg/CVMix-src/src/shared,config_src/solo_driver,src/{*,*/*}}
     
@@ -95,27 +92,31 @@ if [[ ${compile_ocean_only} == 1 ]] ; then
     ../../../../src/mkmf/bin/mkmf -t ../../../../src/mkmf/templates/${COMPILE_OPTION} -o "-I../../shared/repro -I${FMS_DIR}" -p "MOM6 -L${FMS_DIR} -L../../shared/repro  -lfms" -c "-Duse_libMPI -Duse_netcdf -DSPMD" path_names
     
     echo "compiling MOM6 ocean only ..."
-    if ( ! make NETCDF=4 REPRO=1 MOM6 -j ) ; then
-        sadness "compiling Ocean_only exectuable failed"
+    make NETCDF=4 REPRO=1 MOM6 -j
+    set result=$?
+    if [[ $result != 0 ]] then
+        echo "compiling Ocean_only exectuable failed"
+        exit 8
+    else
+        echo "compiling Ocean_only exectuable successful"
     fi
-    echo "compiling Ocean_only exectuable successful"
 
-    # echo "generating libocean.a"
-    # ar rv libocean.a *o
+# echo "generating libocean.a"
+# ar rv libocean.a *o
 
 fi
 echo "=================================================="
 
 #######################################
-if [[ ${compile_MOM6_SIS2} == 1 ]] ; then
+if [[ ${compile_MOM6_SIS2} == 1 ]] then
     echo "compiling MOM6-SIS2 ..."
     cd $BASEDIR
     mkdir -p build/intel/ice_ocean_SIS2/repro
     cd build/intel/ice_ocean_SIS2/repro
-    if [[ -f path_names ]] ; then 
+    if [[ -f path_names ]] then 
         rm -f path_names
     fi
-    
+        
     echo "generating file_paths ..."
     ../../../../src/mkmf/bin/list_paths ./ ../../../../src/MOM6/config_src/{dynamic,coupled_driver} ../../../../src/MOM6/src/{*,*/*}/ ../../../../src/{atmos_null,coupler,land_null,ice_ocean_extras,icebergs,SIS2,FMS/coupler,FMS/include}
     
@@ -123,10 +124,12 @@ if [[ ${compile_MOM6_SIS2} == 1 ]] ; then
     ../../../../src/mkmf/bin/mkmf -t ../../../../src/mkmf/templates/${COMPILE_OPTION} -o '-I../../shared/repro' -p MOM6 -l '-L../../shared/repro  -lfms' -c '-Duse_libMPI -Duse_netcdf -DSPMD -DUSE_LOG_DIAG_FIELD_INFO -Duse_AM3_physics -D_USE_LEGACY_LAND_' path_names
     
     echo "compiling MOM6 ocean only ..."
-    if ( ! make NETCDF=4 REPRO=1 MOM6 -j ) ; then
-        sadness "compiling MOM6-SIS2 exectuable/lib failed" 1>&2
+    if ( ! make NETCDF=4 REPRO=1 MOM6 -j )
+        echo "compiling MOM6-SIS2 exectuable/lib failed" 1>&2
+        exit 8
+    else
+        echo "compiling MOM6-SIS2 exectuable/lib successful"
     fi
-    echo "compiling MOM6-SIS2 exectuable/lib successful"
 
     echo "generating lib_ocean.a"
     rm repro
