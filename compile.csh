@@ -49,7 +49,8 @@ if [[ ${compile_MOM6_LIB} == 1 ]] ; then
     fi
 
     echo "generating file_paths ..."
-    ../../../../src/mkmf/bin/list_paths ../../../../src/MOM6/src/*/ ../../../../src/MOM6/src/*/*/ ../../../../src/MOM6/config_src/dynamic_symmetric/ ../../../../src/MOM6/config_src/coupled_driver/ 
+    #../../../../src/mkmf/bin/list_paths ../../../../src/MOM6/src/*/ ../../../../src/MOM6/src/*/*/ ../../../../src/MOM6/config_src/dynamic_symmetric/ ../../../../src/MOM6/config_src/coupled_driver/ 
+    ../../../../src/mkmf/bin/list_paths ../../../../src/MOM6/src/*/ ../../../../src/MOM6/src/*/*/ ../../../../src/MOM6/config_src/dynamic/ ../../../../src/MOM6/config_src/coupled_driver/ 
     
     echo "generating makefile ..."
     ../../../../src/mkmf/bin/mkmf -t ../../../../src/mkmf/templates/${COMPILE_OPTION} -p lib_ocean.a -o "-I${FMS_DIR}" path_names
