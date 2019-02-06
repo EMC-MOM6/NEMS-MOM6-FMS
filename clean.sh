@@ -8,7 +8,7 @@ echo "Cleaning MOM6"
 
 rm -rf build exec MOM6_INSTALL 
 find . -name '*.o' -o -name '*.mod' -o -name '*.a' | xargs rm -f
-rm -f src/MOM6/config_src/nems_cap/mom6.mk.install
+rm -f mom6.mk.install
 cd ..
 
 echo "...done cleaning MOM6"

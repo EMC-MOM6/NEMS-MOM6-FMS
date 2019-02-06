@@ -56,12 +56,13 @@ if [[ ${compile_MOM6_LIB} == 1 ]] ; then
     fi
 
     echo "generating file_paths ..."
-    #../../../../src/mkmf/bin/list_paths ../../../../src/MOM6/src/*/ ../../../../src/MOM6/src/*/*/ ../../../../src/MOM6/config_src/dynamic_symmetric/ ../../../../src/MOM6/config_src/coupled_driver/ 
-    ../../../../src/mkmf/bin/list_paths ../../../../src/MOM6/src/*/ ../../../../src/MOM6/src/*/*/ ../../../../src/MOM6/config_src/dynamic/ ../../../../src/MOM6/config_src/coupled_driver/ 
+    ../../../../src/mkmf/bin/list_paths ../../../../src/MOM6/src/*/ ../../../../src/MOM6/src/*/*/ ../../../../src/MOM6/config_src/dynamic/ ../../../../src/MOM6/config_src/nuopc_driver/{MOM_ocean_model.F90,MOM_surface_forcing.F90} 
     
+
     echo "generating makefile ..."
     ../../../../src/mkmf/bin/mkmf -t ../../../../src/mkmf/templates/${COMPILE_OPTION} -p lib_ocean.a -o "-I${FMS_DIR}" path_names
     
+
     echo "compiling MOM6 library..."
     if ( ! make NETCDF=4 REPRO=1 lib_ocean.a  ) ; then
         sadness "compiling MOM6 failed"
