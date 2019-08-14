@@ -1,6 +1,8 @@
 [submodule "src/MOM6"]
 	path = src/MOM6
 	url = https://github.com/EMC-MOM6/MOM6
+	branch = cmeps_integration
 [submodule "src/mkmf"]
 	path = src/mkmf
 	url = https://github.com/EMC-MOM6/mkmf
+	branch = cheyenne_support
