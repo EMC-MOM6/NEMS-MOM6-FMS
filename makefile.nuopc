@@ -10,7 +10,7 @@ UTILINCS        = -I$(FMSDIR) -I$(NEMSMOMDIR)/lib_ocean -I.
 MOM             = mom6
 NUOPCAPDIR      = src/MOM6/config_src/nuopc_driver
 
-USER_CFLAGS=-DMOM6_CAP 
+USER_CFLAGS=-DMOM6_CAP $(CPPCMEPS) 
 
 .SUFFIXES: .F90
 
